@@ -1,0 +1,28 @@
+<div id="chat-container">
+    <div id="chat-header">
+        <h4 >Chat Customer Service</h4>
+        <h6 id="nombreusuario">Usuario</h6>
+        <img src="https://i.ibb.co/DY2fSwC/Open-Peeps-Bust-16.png" alt="Logo Customer Service" id="customer-service-logo">
+    </div>
+    <div id="chat-messages">
+        <!-- Placeholder for incoming and outgoing messages -->
+        <div class="message sender">
+            <div class="user-info">
+                <div class="sender-name">Conectado</div>
+            </div>
+            <div id="chat">Cargando mensajes...</div>
+        </div>
+    </div>
+    <form id="formulario">
+        <input type="text" name="mensaje" id="mensaje" placeholder="Type your message...">
+        <button id="sendMessage"><i class="fas fa-paper-plane"></i> Enviar</button>
+        <button id="clearChat"><i class="fas fa-trash"></i> Vaciar Chat</button>
+    </form>
+</div>
+
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/chat.js"></script>

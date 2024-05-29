@@ -1,0 +1,24 @@
+[
+  {
+    "id": 2,
+    "title": "asd",
+    "description": "asd",
+    "price": "2323",
+    "category": "zapatillas",
+    "status": true,
+    "thumbnail": "https://i.ibb.co/nngfHbZ/puma.png|",
+    "code": "asdsadasdsa",
+    "stock": "222"
+  },
+  {
+    "id": 3,
+    "title": "axel",
+    "description": "estrada",
+    "price": "21",
+    "category": "estudiante",
+    "status": true,
+    "thumbnail": "imagen",
+    "code": "21",
+    "stock": "21"
+  }
+]
