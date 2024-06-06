@@ -26,7 +26,7 @@ routerC.get('/setcookie', async (req, res) => {
         res.status(500).send({  payload: null, error: err.message });
     }
 });
-/*
+
 routerC.get('/deletecookie', async (req, res) => {
     try {
         res.clearCookie('codercookie');
@@ -35,5 +35,5 @@ routerC.get('/deletecookie', async (req, res) => {
         res.status(500).send({ origin: config.SERVER, payload: null, error: err.message });
     }
 });
-*/
+
 export default routerC;
