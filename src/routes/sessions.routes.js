@@ -31,38 +31,11 @@ routerS.get('/counter', async (req, res) => {
 
 routerS.post('/register', async (req, res) => {
     //borre el codigo porque acabo de ver un error en el login, para no traer problemas soluciono lo otro primero y despues vuelvo a ponerlo
-    /*
-        const { first_name, last_name, email, age, password } = req.body;
-
-    try {
-        const existingUser = await userModel.findOne({ email });
-
-        if (existingUser) {
-            return res.status(400).json({ message: "User already exists" });
-        }
-
-        const newUser = new userModel({
-            first_name,
-            last_name,
-            email, 
-            age, 
-            password
-        });
-
-        await newUser.save();
-        res.status(201).send('User created');
-    } catch (error) {
-        res.status(500).json({ message: "Error registering user" });
-        console.error("Error registering user:", error);
-    }     
-    
-    */
 });
 
 routerS.post('/login', async (req, res) => {
     try {
-        // Recuperamos los campos que llegan del formulario
-        // Aquí luego se deberían agregar otras validaciones
+
         const { email, password } = req.body;
         
         const savedFirstName = 'Franco';
@@ -76,8 +49,7 @@ routerS.post('/login', async (req, res) => {
         }
         
         req.session.user = { firstName: savedFirstName, lastName: savedLastName, email: email, role: savedRole };
-        // res.status(200).send({ origin: config.SERVER, payload: 'Bienvenido!' });
-        // res.redirect nos permite redireccionar a una plantilla en lugar de devolver un mensaje
+
         res.redirect('/profile');
     } catch (err) {
         res.status(500).send({ payload: null, error: err.message });
