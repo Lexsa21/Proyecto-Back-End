@@ -5,7 +5,10 @@ const routerS = Router();
 
 
 const adminAuth = (req, res, next) => {
-    if (req.session.user.role !== 'admin') return res.status(401).send({ payload: 'Acceso no autorizado: se requiere nivel de admin' });
+    // ?: operador opcional: si no existe el objeto req.session.user o el role no es admin
+    // if (!req.session.user || req.session.user.role !== 'admin')
+    if (req.session.user?.role !== 'admin')
+        return res.status(401).send({ origin: config.SERVER, payload: 'Acceso no autorizado: se requiere autenticación y nivel de admin' });
 
     next();
 }
@@ -26,24 +29,30 @@ routerS.get('/counter', async (req, res) => {
 });
 
 
-routerS.get('/login', async (req, res) => {
+routerS.post('/register', async (req, res) => {
+    //borre el codigo porque acabo de ver un error en el login, para no traer problemas soluciono lo otro primero y despues vuelvo a ponerlo
+});
+
+routerS.post('/login', async (req, res) => {
     try {
-        // Esto simula datos ingresados desde un formulario
-        const email = 'idux.net@gmail.com';
-        const password = 'abc123';
+        // Recuperamos los campos que llegan del formulario
+        // Aquí luego se deberían agregar otras validaciones
+        const { email, password } = req.body;
         
-        // Esto simula datos existentes en base de datos
-        const savedNamed = 'Carlos Perren';
-        const savedEmail = 'idux.net@gmail.com';
+        const savedFirstName = 'Franco';
+        const savedLastName = 'Rodriguez';
+        const savedEmail = 'francoR@gmail.com';
         const savedPassword = 'abc123';
-        const savedRole = 'premium';
+        const savedRole = 'admin';
 
         if (email !== savedEmail || password !== savedPassword) {
             return res.status(401).send({ payload: 'Datos de acceso no válidos' });
         }
         
-        req.session.user = { name: savedNamed, email: email, role: savedRole };
-        res.status(200).send({ payload: 'Bienvenido!' });
+        req.session.user = { firstName: savedFirstName, lastName: savedLastName, email: email, role: savedRole };
+        // res.status(200).send({ origin: config.SERVER, payload: 'Bienvenido!' });
+        // res.redirect nos permite redireccionar a una plantilla en lugar de devolver un mensaje
+        res.redirect('/profile');
     } catch (err) {
         res.status(500).send({ payload: null, error: err.message });
     }

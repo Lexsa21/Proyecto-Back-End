@@ -4,6 +4,8 @@ import handlebars from "express-handlebars"
 import {Server} from "socket.io"
 import cookieParser from "cookie-parser"
 import session from "express-session"
+import FileStore from "session-file-store"
+//preguntar porque no me puedo conectar desde mongo, con sessionFile si puedo por ahora
 
 import routerP from "./routes/products.router.js";
 import routerV from "./routes/views.router.js";
@@ -17,11 +19,13 @@ import connectToDB from "./Dao/config/configServer.js";
 
 
 const app = express()
+const fileStorage = FileStore(session);
 const PORT=3000
 
 app.use(express.static(__dirname + "/public"))
 app.use(cookieParser(SECRET))
 app.use(session({
+    store: new fileStorage({ path: './sessions', ttl: 100, retries: 0 }),
     secret: SECRET,
     resave: true,
     saveUninitialized: true

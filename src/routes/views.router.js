@@ -22,4 +22,21 @@ routerV.get("/chat",(req,res)=>{
 })
 
 
+//agregue rutas parte de sessions clase 19
+routerV.get('/register', (req, res) => {
+    res.render('register', {});
+});
+
+routerV.get('/login', (req, res) => {
+    // Si hay datos de sesión activos, redireccionamos al perfil
+    if (req.session.user) return res.redirect('/profile');
+    res.render('login', {});
+});
+
+routerV.get('/profile', (req, res) => {
+    // Si NO hay datos de sesión activos, redireccionamos al login
+    if (!req.session.user) return res.redirect('/login');
+    res.render('profile', { user: req.session.user });
+});
+
 export default routerV
