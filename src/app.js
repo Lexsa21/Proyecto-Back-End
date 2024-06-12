@@ -22,7 +22,13 @@ const app = express()
 const fileStorage = FileStore(session);
 const PORT=3000
 
+//carpeta publica
 app.use(express.static(__dirname + "/public"))
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+//secret y session
 app.use(cookieParser(SECRET))
 app.use(session({
     store: new fileStorage({ path: './sessions', ttl: 100, retries: 0 }),
