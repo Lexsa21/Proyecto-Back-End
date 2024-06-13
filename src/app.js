@@ -31,7 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 //secret y session
 app.use(cookieParser(SECRET))
 app.use(session({
-    store: new fileStorage({ path: './sessions', ttl: 100, retries: 0 }),
+    store: new fileStorage({ path: './sessions', ttl: 100, retries: 0 }),  //desde mongo no puedo
     secret: SECRET,
     resave: true,
     saveUninitialized: true

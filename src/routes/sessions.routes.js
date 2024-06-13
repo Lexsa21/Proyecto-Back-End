@@ -1,31 +1,23 @@
 import { Router } from 'express';
 import { __dirname } from '../utils.js';
+import { createHash ,isValidPassword } from '../utils.js';
+import UsersManager from '../Dao/controllers/Mongo/users.manager.mdb.js';
 
 const routerS = Router();
+const manager = new UsersManager();
 
 
 const adminAuth = (req, res, next) => {
     // ?: operador opcional: si no existe el objeto req.session.user o el role no es admin
     // if (!req.session.user || req.session.user.role !== 'admin')
     if (req.session.user?.role !== 'admin')
-        return res.status(401).send({ origin: config.SERVER, payload: 'Acceso no autorizado: se requiere autenticación y nivel de admin' });
+        return res.status(403).send({  payload: 'Acceso no autorizado: se requiere autenticación y nivel de admin' });
         //fijarme que cuando cambio el rol de admin a usuario me tira que no esta definido (1:46:00 clase 19 mismo error con el profe)
     next();
 }
 
-routerS.get('/counter', async (req, res) => {
-    try {
-
-        if (req.session.counter) {
-            req.session.counter++;
-            res.status(200).send({ payload: `Visitas: ${req.session.counter}` });
-        } else {
-            req.session.counter = 1;
-            res.status(200).send({  payload: 'Bienvenido, es tu primer visita!' });
-        }
-    } catch (err) {
-        res.status(500).send({  payload: null, error: err.message });
-    }
+routerS.get('/hash/:password', async (req, res) => {
+    res.status(200).send({ payload: createHash(req.params.password) });
 });
 
 /*
@@ -56,30 +48,55 @@ routerS.post('/register', async (req, res) => {
         }    
 });
 */
-
+// Esto es como tenia antes con los datos hardcodeados
 routerS.post('/login', async (req, res) => {
     try {
 
         const { email, password } = req.body;
-        
+        /*
         const savedFirstName = 'Franco';
         const savedLastName = 'Rodriguez';
         const savedEmail = 'francoR@gmail.com';
         const savedPassword = 'abc123';
         const savedRole = 'admin';
-
-        if (email !== savedEmail || password !== savedPassword) {
+        */
+        const foundUser = await manager.getOne({ email: email });
+        if (foundUser && isValidPassword(password, foundUser.password)) {
+            req.session.user = { firstName: foundUser.firstName, lastName: foundUser.lastName, email: email, role: foundUser.role };
+            res.redirect('/profile');
+        }else{
             return res.status(401).send({ payload: 'Datos de acceso no válidos' });
         }
-        
-        req.session.user = { firstName: savedFirstName, lastName: savedLastName, email: email, role: savedRole };
-
-        res.redirect('/profile');
     } catch (err) {
         res.status(500).send({ payload: null, error: err.message });
     }
 });
 
+/*
+routerS.post('/login', verifyRequiredBody(['email', 'password']), async (req, res) => {
+    try {
+
+        const { email, password } = req.body;
+        const foundUser = await manager.getOne({ email: email });
+
+        if (foundUser && isValidPassword(password, foundUser.password)) {
+
+            const { password, ...filteredFoundUser } = foundUser;
+            // req.session.user = { firstName: foundUser.firstName, lastName: foundUser.lastName, email: email, role: foundUser.role };
+            req.session.user = filteredFoundUser;
+            req.session.save(err => {
+                if (err) return res.status(500).send({ origin: config.SERVER, payload: null, error: err.message });
+
+                res.redirect('/profile');
+            });
+        } else {
+            res.status(401).send({ origin: config.SERVER, payload: 'Datos de acceso no válidos' });
+        }
+    } catch (err) {
+        res.status(500).send({ origin: config.SERVER, payload: null, error: err.message });
+    }
+});
+*/
 
 routerS.get('/private', adminAuth, async (req, res) => {
     try {
