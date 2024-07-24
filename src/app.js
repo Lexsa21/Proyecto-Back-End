@@ -4,6 +4,7 @@ import handlebars from "express-handlebars"
 import {Server} from "socket.io"
 import cookieParser from "cookie-parser"
 import session from "express-session"
+import passport from "passport"
 import FileStore from "session-file-store"
 //preguntar porque no me puedo conectar desde mongo, con sessionFile si puedo por ahora
 
@@ -21,6 +22,10 @@ import connectToDB from "./Dao/config/configServer.js";
 const app = express()
 const fileStorage = FileStore(session);
 const PORT=3000
+
+//passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 //carpeta publica
 app.use(express.static(__dirname + "/public"))
